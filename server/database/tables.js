@@ -1,29 +1,32 @@
-// Import the repository modules responsible for handling data operations on the tables
+// Importez les modules des dépôts responsables des opérations de données sur les tables
 const ItemRepository = require("./models/ItemRepository");
+const CategoryRepository = require("./models/CategoryRepositery");
+const ProgramRepository = require("./models/ProgramRepository");
 
-// Create an empty object to hold data repositories for different tables
+// Créez un objet vide pour contenir les dépôts de données pour différentes tables
 const tables = {};
 
 /* ************************************************************************* */
-// Register data repositories for tables
+// Enregistrez les dépôts de données pour les tables
 /* ************************************************************************* */
 
-// Register each repository as data access point for its table
+// Enregistrez chaque dépôt en tant que point d'accès aux données pour sa table
 tables.item = new ItemRepository();
-
+tables.category = new CategoryRepository();
+tables.program = new ProgramRepository();
 /* ************************************************************************* */
 
-// Use a Proxy to customize error messages when trying to access a non-existing table
+// Utilisez un Proxy pour personnaliser les messages d'erreur lors de l'accès à une table inexistante
 
-// Export the Proxy instance with custom error handling
+// Exportez l'instance de Proxy avec la gestion des erreurs personnalisée
 module.exports = new Proxy(tables, {
   get(obj, prop) {
-    // Check if the property (table) exists in the tables object
+    // Vérifiez si la propriété (table) existe dans l'objet tables
     if (prop in obj) return obj[prop];
 
-    // If the property (table) does not exist, throw a ReferenceError with a custom error message
+    // Si la propriété (table) n'existe pas, lancez une ReferenceError avec un message d'erreur personnalisé
     throw new ReferenceError(
-      `tables.${prop} is not defined. Did you register it in ${__filename}?`
+      `tables.${prop} n'est pas défini. L'avez-vous enregistré dans ${__filename} ?`
     );
   },
 });

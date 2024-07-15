@@ -1,6 +1,5 @@
-// server/app/controllers/categories.js
+const tables = require("../../database/tables");
 
-// Some data to make the trick
 const categories = [
   {
     id: 1,
@@ -12,21 +11,20 @@ const categories = [
   },
 ];
 
-const getAllCategories = (req, res) => {
-  res.json(categories);
+const browse = async (req, res) => {
+  const categoriesFromDB = await tables.category.readAll(); // Assurez-vous que cette ligne fonctionne et que `tables.category.readAll()` existe.
+  res.json(categoriesFromDB);
 };
 
-const getCategoryById = (req, res) => {
-  const { id } = req.params;
-  const category = categories.find((cat) => cat.id === parseInt(id, 10));
-  if (category) {
+const read = (req, res) => {
+  const parsedId = parseInt(req.params.id, 10);
+  const category = categories.find((p) => p.id === parsedId);
+
+  if (category != null) {
     res.json(category);
   } else {
-    res.status(404).json({ message: "Category not found" });
+    res.sendStatus(404);
   }
 };
 
-module.exports = {
-  getAllCategories,
-  getCategoryById,
-};
+module.exports = { browse, read };
